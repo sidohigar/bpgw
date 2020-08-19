@@ -30,39 +30,10 @@
 
 <script>
 export default {
+  props: ['menus'],
   data () {
     return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'mdi-home',
-          subItems: [
-            {
-              title: 'Dashboard',
-              to: '/'
-            },
-            {
-              title: 'About',
-              to: '/about'
-            }
-          ]
-        },
-        {
-          title: 'Clone',
-          active: true,
-          icon: 'mdi-account',
-          subItems: [
-            {
-              title: 'Dashboard2',
-              to: '/'
-            },
-            {
-              title: 'About2',
-              to: '/about'
-            }
-          ]
-        }
-      ]
+      items: this.menus
     }
   }
 }

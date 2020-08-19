@@ -2,19 +2,28 @@
   <v-app>
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <site-title :title="title"></site-title>
+      <site-title :title="site.title"></site-title>
       <v-spacer></v-spacer>
+      <v-btn icon @click="save">
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+      <v-btn icon @click="read">
+        <v-icon>mdi-read</v-icon>
+      </v-btn>
+      <v-btn icon @click="readOnce">
+        <v-icon>mdi-qqchat</v-icon>
+      </v-btn>
       <v-btn icon to="/about">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </v-app-bar>
     <v-navigation-drawer app v-model="drawer">
-      <site-menu></site-menu>
+      <site-menu :menus="site.menu"></site-menu>
     </v-navigation-drawer>
     <v-main>
       <router-view/>
     </v-main>
-    <site-footer :footer="footer"></site-footer>
+    <site-footer :footer="site.footer"></site-footer>
   </v-app>
 </template>
 
@@ -29,8 +38,75 @@ export default {
   data () {
     return {
       drawer: false,
-      title: '나의 타이틀입니다.',
-      footer: '블루포트'
+      site: {
+        menu: [
+          {
+            title: 'Home',
+            icon: 'mdi-home',
+            subItems: [
+              {
+                title: 'Dashboard',
+                to: '/'
+              },
+              {
+                title: 'About',
+                to: '/about'
+              }
+            ]
+          },
+          {
+            title: 'Clone',
+            active: true,
+            icon: 'mdi-account',
+            subItems: [
+              {
+                title: 'Dashboard2',
+                to: '/'
+              },
+              {
+                title: 'About2',
+                to: '/about'
+              }
+            ]
+          }
+        ],
+        title: '',
+        footer: ''
+      }
+    }
+  },
+  created () {
+    this.subscribe()
+  },
+  mounted () {
+  },
+  methods: {
+    subscribe () {
+      this.$firebase.database().ref().child('site').on('value', (sn) => {
+        const v = sn.val()
+        if (!v) {
+          this.$firebase.database().ref().child('site').set(this.site)
+        } else {
+          this.site = v
+        }
+      }, (e) => {
+        console.log(e.message)
+      })
+    },
+    save () {
+      this.$firebase.database().ref().child('abcd').set({
+        title: '타이틀', text: '내용(텍스트)'
+      })
+    },
+    read () {
+      this.$firebase.database().ref().child('abcd').on('value', (sn) => {
+        // console.log(sn)
+        console.log(sn.val())
+      })
+    },
+    async readOnce () {
+      const sn = await this.$firebase.database().ref().child('abcd').once('value')
+      console.log(sn.val())
     }
   }
 }
