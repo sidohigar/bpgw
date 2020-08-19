@@ -17,8 +17,8 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer app v-model="drawer">
-      <site-menu :menus="site.menu"></site-menu>
+    <v-navigation-drawer app v-model="drawer" width="400">
+      <site-menu :items="site.menu"></site-menu>
     </v-navigation-drawer>
     <v-main>
       <router-view/>
@@ -39,37 +39,7 @@ export default {
     return {
       drawer: false,
       site: {
-        menu: [
-          {
-            title: 'Home',
-            icon: 'mdi-home',
-            subItems: [
-              {
-                title: 'Dashboard',
-                to: '/'
-              },
-              {
-                title: 'About',
-                to: '/about'
-              }
-            ]
-          },
-          {
-            title: 'Clone',
-            active: true,
-            icon: 'mdi-account',
-            subItems: [
-              {
-                title: 'Dashboard2',
-                to: '/'
-              },
-              {
-                title: 'About2',
-                to: '/about'
-              }
-            ]
-          }
-        ],
+        menu: [],
         title: '',
         footer: ''
       }
@@ -94,18 +64,18 @@ export default {
       })
     },
     save () {
-      this.$firebase.database().ref().child('abcd').set({
-        title: '타이틀', text: '내용(텍스트)'
+      this.$firebase.database().ref().child('site').set({
+        title: '', footer: '', menu: [{ title: '', icon: '' }]
       })
     },
     read () {
-      this.$firebase.database().ref().child('abcd').on('value', (sn) => {
+      this.$firebase.database().ref().child('site').on('value', (sn) => {
         // console.log(sn)
         console.log(sn.val())
       })
     },
     async readOnce () {
-      const sn = await this.$firebase.database().ref().child('abcd').once('value')
+      const sn = await this.$firebase.database().ref().child('site').once('value')
       console.log(sn.val())
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <v-toolbar-title>
     {{title}}
-    <v-btn icon @click="openDialog">
+    <v-btn icon @click="openDialog" v-if="$store.state.editable">
       <v-icon>mdi-grease-pencil</v-icon>
     </v-btn>
     <v-dialog v-model="dialog" max-width="400">
@@ -40,7 +40,7 @@ export default {
     async save () {
       try {
         await this.$firebase.database().ref().child('site').update({ title: this.text })
-        throw new Error('예외 테스트 (강제 예외 발생!)')
+        // throw new Error('예외 테스트 (강제 예외 발생!)')
       } finally {
         this.dialog = false
       }
